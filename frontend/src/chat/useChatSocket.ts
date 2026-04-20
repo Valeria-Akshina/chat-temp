@@ -120,4 +120,3 @@ export function useChatSocket(backendUrl: string) {
     isSystemMessage,
   }
 }
-
