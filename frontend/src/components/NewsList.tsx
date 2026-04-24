@@ -18,44 +18,75 @@ export const NewsList: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-        await newsApi.create(form, AUTH_TOKEN);
-        setForm({ title: '', content: '', author: '' });
-        load();
+            await newsApi.create(form, AUTH_TOKEN);
+            setForm({ title: '', content: '', author: '' });
+            load();
         } catch (e: any) { alert(e.message); }
     };
 
     const handleDelete = async (id: string) => {
         try {
-        await newsApi.delete(id, AUTH_TOKEN);
-        load();
+            await newsApi.delete(id, AUTH_TOKEN);
+            load();
         } catch (e: any) { alert(e.message); }
     };
 
     return (
-        <div style={{ marginTop: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '8px', color: '#333' }}>
-        <h3>Управление Новостями (CRUD)</h3>
-        
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <input placeholder="Заголовок" value={form.title} onChange={e => setForm({...form, title: e.target.value})} />
-            <input placeholder="Автор" value={form.author} onChange={e => setForm({...form, author: e.target.value})} />
-            <textarea placeholder="Текст новости" value={form.content} onChange={e => setForm({...form, content: e.target.value})} />
-            <button type="submit" style={{ cursor: 'pointer' }}>Опубликовать</button>
-        </form>
-
-        <hr />
-
-        <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-            {news.map(n => (
-            <div key={n.id} style={{ borderBottom: '1px solid #ddd', padding: '10px 0' }}>
-                <h4 style={{ margin: '0' }}>{n.title}</h4>
-                <p style={{ fontSize: '14px' }}>{n.content}</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <small>Автор: {n.author}</small>
-                <button onClick={() => handleDelete(n.id)} style={{ color: 'red', border: 'none', background: 'none', cursor: 'pointer' }}>Удалить</button>
-                </div>
+        <div className="chatContainer" style={{ marginTop: '40px', paddingBottom: '60px' }}>
+            <h2 style={{ textAlign: 'left', marginBottom: '20px' }}>Управление новостями</h2>
+            
+            <div className="chatPanel" style={{ padding: '20px', marginBottom: '30px' }}>
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <input 
+                            className="chatInput" 
+                            placeholder="Заголовок новости" 
+                            value={form.title} 
+                            onChange={e => setForm({...form, title: e.target.value})} 
+                        />
+                        <input 
+                            className="chatInput" 
+                            placeholder="Автор" 
+                            style={{ width: '30%' }}
+                            value={form.author} 
+                            onChange={e => setForm({...form, author: e.target.value})} 
+                        />
+                    </div>
+                    <textarea 
+                        className="chatInput" 
+                        placeholder="Текст новости..." 
+                        style={{ minHeight: '80px', resize: 'vertical' }}
+                        value={form.content} 
+                        onChange={e => setForm({...form, content: e.target.value})} 
+                    />
+                    <button type="submit" className="chatButton" style={{ alignSelf: 'flex-start' }}>
+                        Опубликовать новость
+                    </button>
+                </form>
             </div>
-            ))}
-        </div>
+
+            <div style={{ display: 'grid', gap: '16px', textAlign: 'left' }}>
+                {news.length === 0 && <p className="chatHint">Новостей пока нет...</p>}
+                
+                {news.map(n => (
+                    <div key={n.id} className="chatMessage" style={{ maxWidth: '100%', width: '100%', margin: '0', boxSizing: 'border-box' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                            <h4 style={{ margin: '0 0 8px 0', color: 'var(--text-h)' }}>{n.title}</h4>
+                            <button 
+                                onClick={() => handleDelete(n.id)} 
+                                style={{ color: '#ef4444', border: 'none', background: 'none', cursor: 'pointer', fontSize: '12px' }}
+                            >
+                                Удалить
+                            </button>
+                        </div>
+                        <p style={{ fontSize: '16px', marginBottom: '12px', lineHeight: '1.5' }}>{n.content}</p>
+                        <div className="chatAuthor" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span>Автор: {n.author}</span>
+                            <span>{new Date(n.createdAt).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

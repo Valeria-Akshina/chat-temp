@@ -1,6 +1,7 @@
 import './App.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useChatSocket } from './chat/useChatSocket'
+import { NewsList } from './components/NewsList'
 
 function App() {
   const backendUrl = useMemo(
@@ -168,6 +169,11 @@ function App() {
           сервиса на сервере.
         </div>
       </div>
+
+        <div>
+          <NewsList/>
+        </div>
+
     </div>
   )
 }
